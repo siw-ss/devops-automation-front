@@ -10,4 +10,16 @@ COPY ./ /usr/local/app/
 RUN npm install
 
 # Generate the build of the application
-CMD ["npm", "run", "build"]
+RUN npm run build
+
+
+# Stage 2: Serve app with nginx server
+
+# Use official nginx image as the base image
+FROM nginx:latest
+
+# Copy the build output to replace the default nginx contents.
+COPY --from=build /usr/local/app/dist/devops-automation-front /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
